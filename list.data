@@ -1,0 +1,67 @@
+dst net 10.70.0.0/16 red interna
+dst net 10.2.0.0/16 red balance
+dst net 192.168.0.0/16 red nat
+dst net 10.1.0.0/16 red interna no openstack
+dst net 172.16.0.0/16 vpn juniper
+dst net 50.31.164.0/24 new relic
+dst host 38.99.237.40 despegar.com
+dst host 169.254.169.254 broadcast
+dst host 127.0.0.1 localhost
+dst net 208.72.9.0/24 navitaire
+dst net 208.72.8.0/24  navitaire
+dst net 82.150.224.0/21 Amadeus
+dst net 151.193.48.0/20 Sabre 
+dst net 10.11.0.0/16 red interna
+dst host 255.255.255.255 broadcast
+dst host 169.254.255.255 broadcast 
+dst net 10.77.0.0/16 red iscsi 
+dst net 216.113.128.0/19 travelport
+dst net 107.14.32.0/20 google
+dst net 216.58.192.0/19 google
+dst net 216.22.100.0/24 despegar
+dst net 64.76.243.0/24 despegar
+dst net 38.99.237.0/24 despegar
+dst host 46.16.252.17 globall collect
+dst host 200.124.123.52visa
+dst host 209.133.193.138keycdn
+dst host 200.82.126.12payment service platform
+dst host  209.107.217.192 akamai ssl
+dst net  63.148.206.0/23 akamai
+dst net 23.202.36.0/23 akamai
+dst net 184.51.150.0/23 akamai
+dst net 23.3.48.0/20 akamai
+dst net 23.15.5.0/24 akamai
+dst net 23.202.16.0/20 akamai
+dst net 23.203.100.0/22 akamai
+dst host 69.64.187.29 safetypay 
+dst net 204.2.187.0/24 akamai
+dst host 209.107.217.177 akamai
+dst net 173.194.219.0/24 google
+dst host 165.254.49.143 akamai
+dst host 113.197.123.2 american express
+dst host 54.149.20.228 datastaxs
+dst net 23.202.48.0/20 akamai
+dst net 23.208.80.0/20 akamai
+dst net 23.76.112.0/20 akamai
+dst host 108.166.0.205 payulatam
+dst host 174.35.32.147 cdnetworks
+dst host 172.19.200.6 visa cobros
+dst net 63.141.192.0/23 akamai
+dst host 165.254.0.32 akamai ssl
+dst host 165.254.0.41 akamai 
+dst host 165.254.0.8 akamai
+dst host 165.254.49.148 akamai
+dst host 208.86.144.203 encompass
+dst host 52.10.188.176 datastax
+dst net 74.125.0.0/16 google
+dst host 165.254.49.157 akamai
+dst host 54.77.37.118 bidder - clicks
+dst net 63.151.118.0/23 akamai
+dst host 54.236.170.121 flightstats
+dst host 157.189.192.67 terracota
+dst host 200.185.163.210 voegol
+dst host 201.131.2.103 vivaaerobus
+dst host 177.71.197.20 sete
+dst host 54.94.130.253  passaredo
+dst host 54.94.165.143 sete
+dst host 54.94.209.191 passaredo

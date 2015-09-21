@@ -1,0 +1,12 @@
+project/target
+patroller/target
+*.class
+patroller/bin
+target
+patroller/.cache
+patroller/.classpath
+patroller/.project
+patroller/.settings/org.scala-ide.sdt.core.prefs
+*application.conf
+newrelic.yml
+
