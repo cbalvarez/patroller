@@ -1,7 +1,7 @@
 package com.despegar.patroller.controllers
 
 import org.scalatra.ScalatraServlet
-import com.typesafe.scalalogging.slf4j.Logging
+import com.typesafe.scalalogging.slf4j.StrictLogging
 import net.liftweb.json._
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.DateTime
@@ -14,7 +14,7 @@ import com.despegar.patroller.dao.ReportEvent
 import com.despegar.patroller.services.PatrollSettings
 
 
-class ReportController extends ScalatraServlet with Logging  {
+class ReportController extends ScalatraServlet with StrictLogging  {
   val formatter = DateTimeFormat.forPattern("dd-MM-yyyy HH:mm:ss")
     private val default: DefaultFormats with Object {def dateFormatter: SimpleDateFormat} = new DefaultFormats {
         override def dateFormatter = new java.text.SimpleDateFormat("dd-MM-yyyy HH:mm:ss")

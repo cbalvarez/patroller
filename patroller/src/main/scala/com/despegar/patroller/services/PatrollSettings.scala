@@ -2,7 +2,7 @@ package com.despegar.patroller.services
 
 import com.despegar.patroller.dao.PatrollerDao
 
-case class Trace(shouldTrace:Boolean, tcpdumpParams:String  )
+case class Trace(shouldTrace:Boolean, tcpdumpParams:String, timeToTraceInMinutes:Int  )
 
 object PatrollSettings {
   def currentTcpdump() = {
@@ -10,6 +10,6 @@ object PatrollSettings {
   }
   
   def trace(server:String) = {
-      Trace(true, currentTcpdump)    
+      Trace(true, currentTcpdump, 60)    
   }
 }

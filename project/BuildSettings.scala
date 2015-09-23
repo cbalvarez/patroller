@@ -7,7 +7,7 @@ object BuildSettings {
 
   lazy val basicSettings = Seq(
     organization := "com.despegar",
-    scalaVersion := "2.10.3",
+    scalaVersion := "2.11.6",
     resolvers ++= Dependencies.Repositories,
     scalacOptions := ScalacOptions,
     crossPaths := false,
