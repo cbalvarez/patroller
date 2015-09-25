@@ -3,9 +3,10 @@ package com.despegar.patroller.dao
 import scalikejdbc._
 import com.despegar.sbt.madonna.MadonnaConf
 import org.joda.time.DateTime
+import java.sql.Timestamp
 
 
-case class ReportEvent(val host:String, val vm:String, val ip:String, val localPort:Int, val remotePort:Int, val timestamp:DateTime)
+case class ReportEvent(val host:String, val vm:String, val srcIp:String, val dstIp:String, val srcPort:Int, val dstPort:Int, val timestamp:DateTime)
 case class ReportEventElem(id:Int, event:ReportEvent)
 case class Allowed(typeAllowed:String, allowed:String )
 
@@ -32,16 +33,19 @@ object PatrollerDao {
   }
   
   def listReports(status:Int, start:DateTime, end:DateTime) = DB readOnly { implicit session => 
-    val stmt = sql"""select id, host, ip, vm, local_port, remote_port, ts_reported 
+    val stmt = sql"""select id, host, src_ip, dst_ip, vm, src_port, dst_port, ts_reported 
       from log_report where status = ${status}  and ts_reported >= ${start} and ts_reported <= ${end}
-      """.map { x => ReportEventElem(x.int("id"), ReportEvent( x.string("host"), x.string("ip"), 
-          x.string("vm"), x.int("local_port"), x.int("remote_port"), new DateTime(x.timestamp("ts_reported") )))  }
+      """.map { x => ReportEventElem(x.int("id"), ReportEvent( x.string("host"), 
+          x.string("vm"),
+          x.string("src_ip"), x.string("dst_ip"), 
+           x.int("src_port"), x.int("dst_port"), new DateTime(x.timestamp("ts_reported") )))  }
     stmt.list().apply()
   }
   
   def saveReport(event:ReportEvent) = DB localTx { implicit session => 
-    val stmt = sql"""insert into log_report (host, vm, ip, remote_port, local_port, ts_reported, status) 
-          values (${event.host}, ${event.vm} , ${event.ip}, ${event.remotePort}, ${event.localPort}, ${event.timestamp}, 0  )"""
+    val stmt = sql"""insert into log_report (host, vm, src_ip, dst_ip, src_port, dst_port, ts_reported, status) 
+          values (${event.host}, ${event.vm} , ${event.srcIp}, ${event.dstIp}, ${event.srcPort}, ${event.dstPort}, 
+               ${new Timestamp(  event.timestamp.getMillis )}, 0  )"""
     stmt.update().apply           
   }
   

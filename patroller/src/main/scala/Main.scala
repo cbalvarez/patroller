@@ -17,7 +17,8 @@ object Main extends App{
     val c = LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME)
     val d = c.asInstanceOf[ch.qos.logback.classic.Logger]
     d.detachAndStopAllAppenders()
-
+    
+    d.setLevel(Level.DEBUG)
     val ple = new PatternLayoutEncoder()
     ple.setPattern("%date|%level %msg%n")
     ple.setContext(d.getLoggerContext())

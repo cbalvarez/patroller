@@ -4,10 +4,12 @@ import org.joda.time.DateTime
 import com.despegar.patroller.dao.PatrollerDao
 import com.despegar.patroller.dao.ReportEvent
 import com.despegar.patroller.dao.ReportEventElem
+import com.typesafe.scalalogging.slf4j.StrictLogging
 
 
-object Report {
+object Report extends StrictLogging {
   def reportUnknownDestEvent(r:ReportEvent) = {
+    logger.debug(s"about to insert ${r.toString()}")
     PatrollerDao.saveReport(r)
   }
   

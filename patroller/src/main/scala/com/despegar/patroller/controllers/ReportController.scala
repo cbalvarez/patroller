@@ -27,15 +27,23 @@ class ReportController extends ScalatraServlet with StrictLogging  {
 
 
   post ("/report") {
-    val j = parse(request.body)
-    val host = (j \ "host").values.toString()
-    val vm = (j \ "vm").values.toString()
-    val inport = (j \ "inport").values.toString().toInt
-    val outport = (j \ "outport").values.toString().toInt
-    val ts = formatter.parseDateTime(( j \ "timestamp").values.toString())
-    val ip = (j \ "ip").values.toString()
-    Report.reportUnknownDestEvent(new ReportEvent(host, vm, ip, outport, inport,  ts))
-    "OK"
+    try {
+      val j = parse(request.body)
+      println(j.toString())
+      val host = (j \ "host").values.toString()
+      val vm = (j \ "vm").values.toString()
+      val srcPort = (j \ "srcPort").values.toString().toInt
+      val dstPort = (j \ "dstPort").values.toString().toInt
+      val ts = formatter.parseDateTime(( j \ "timestamp").values.toString())
+      val srcIp = (j \ "srcIp").values.toString()
+      val dstIp = (j \ "dstIp").values.toString()
+      Report.reportUnknownDestEvent(new ReportEvent(host, vm, srcIp, dstIp, srcPort, dstPort,  ts))
+      "OK"
+    } catch {
+      case e:Exception => logger.debug("exception e:" + e.getStackTraceString)
+      throw e
+    }
+     
   }
   
   get("/currentalerts/:begin/:end") {
