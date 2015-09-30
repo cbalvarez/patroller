@@ -5,10 +5,24 @@ import time
 import datetime
 import os
 import re
+import platform
+import ConfigParser
+import logging
+
+Config = ConfigParser.ConfigParser()
+Config.read("./pc.ini")
+
+user = Config.get("Cloudia","usr")
+passwd = Config.get("Cloudia","passwd") 
+cloudUrl = Config.get("Cloudia","url")
+patrollerUrl = Config.get("Patroller","url")
+fileLog = Config.get("Logging","file")
+
+logging.basicConfig(filename = fileLog , level = logging.DEBUG)
 
 class TcpdumpLine:
 	def __init__(self, vm, srcIp, srcPort, dstIp, dstPort):
-		self.host = "host"
+		self.host = platform.node ()
 		self.vm  = vm
 		self.srcIp = srcIp
 		self.srcPort = srcPort
@@ -30,8 +44,33 @@ class TcpdumpLine:
 	
 	
 
+def getClusters(url):
+	auth_handler = urllib2.HTTPPasswordMgrWithDefaultRealm()
+	auth_handler.add_password(None, url, 'perfdb@cgp', 'perfdb')
+	handler = urllib2.HTTPBasicAuthHandler(auth_handler)
+	opener = urllib2.build_opener(handler)
+	res = opener.open(url)
+	s = res.read()
+	return json.loads(s)
+	
+
+def instanceName(instance):
+	return "%s-%02d" % (instance['cluster'], instance['index']) 
+
+
+def buildVmDict(url):
+	clustersJson = getClusters(url)
+	r = {}
+	for cluster in clustersJson:
+		for i in cluster['instances']:
+			r.update ({i['adminAddr'] : instanceName(i)}) 
+			r.update ({i['trafficAddr'] : instanceName(i)}) 
+	return r
+	
+
+
 def log(msg):
-	print msg
+	logging.info(msg)	
 
 def ask(url):
 	req = urllib2.Request(url)	
@@ -56,7 +95,11 @@ def runTcpdump(commands,tts):
 	os.kill(pid, 9)	
 
 def getVm(ipA, ipB):
-	return "vm-prueba-00"
+	if (vmDictionary.get(ipA) != None):
+		return vmDictionary.get(ipA)	
+	if (vmDictionary.get(ipB) != None):
+		return vmDictionary.get(ipB)
+	return "Unkwnown"
 
 def processLine(l):
 	g = re.search(".+ IP (([0-9]{1,3}\.){3}[0-9]{1,3})\.([0-9]+) > (.+)\.([0-9]+)\:", l)
@@ -74,17 +117,22 @@ def processFile():
 	return set(map (lambda x:processLine(x), out.split("\n")))
 
 def sendData(dataToSend,url):
-	#c = httplib.HTTPConnection(server)
 	headers = {"Content-type": "application/json", "Accept": "text/plain"}
 	for d in dataToSend:
 		if (d != None):
 			data = json.dumps(d, default=lambda o: o.__dict__, sort_keys=True, indent = 4) 
-			req = urllib2.Request(url, data, {'Content-Type': 'application/json'})
-			urllib2.urlopen(req)
+			print data
+			#req = urllib2.Request(url, data, {'Content-Type': 'application/json'})
+			#urllib2.urlopen(req)
 			
 	
-#json_trace = ask("http://localhost:9290/patroller/trace/aaa")
+vmDictionary =  buildVmDict(cloudUrl)
+log("instances dictionary loaded")
+#json_trace = ask(patrollerUrl + "/trace/" + platform.node() )
 #if json_trace['shouldTrace'] == True:
 #	performCollection(json_trace)		
+#	r = processFile()
+#	sendData(r,patrollerUrl + "/report")
+
 r = processFile()
 sendData(r, 'http://localhost:9290/patroller/report')

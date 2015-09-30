@@ -11,3 +11,5 @@ patroller/.settings/org.scala-ide.sdt.core.prefs
 newrelic.yml
 client/a
 client/pcap
+client/pc.ini
+
