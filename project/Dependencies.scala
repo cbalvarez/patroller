@@ -41,6 +41,7 @@ object Dependencies {
   val maddonaConfig = "com.despegar.sbt" %% "madonna-configuration" % "0.0.4"
   val typesafeConfig = "com.typesafe" % "config" % "1.2.1"
   val mysql = "mysql" % "mysql-connector-java" % "5.1.12"
+  val commonsNet =  "commons-net" % "commons-net" % "3.3"
 
 
   val scalalikejdbc = "org.scalikejdbc" %% "scalikejdbc" % "2.2.7"
@@ -49,7 +50,7 @@ object Dependencies {
 
   val Compile = Seq(commonsCodec, logback, scalaCompiler, /*jline,*/ scalajTime, jodaTime, jodaConver,
     scalaLogging, scalaUtil, logbackUtil, getOpt, httpClient, mail, liftJson, scalatra, jetty, javax, asyncHttpClient, 
-    maddonaConfig, typesafeConfig, scalalikejdbc, h2, mysql)
+    maddonaConfig, typesafeConfig, scalalikejdbc, h2, mysql, commonsNet)
 
   val Test = Seq(junit, scalatest, mockito, easymock, asyncHttpClient) map (_ % "test")
 

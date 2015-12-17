@@ -1,3 +1,5 @@
+package com.despegar.patroller
+
 import org.eclipse.jetty.server.nio.SelectChannelConnector
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.webapp.WebAppContext
@@ -7,10 +9,9 @@ import org.slf4j.LoggerFactory
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.core.FileAppender
 import ch.qos.logback.classic.spi.ILoggingEvent
-import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Level 
 import com.despegar.sbt.madonna.MadonnaConf
-
-
+  
 object Main extends App{
   def setLog() = {
     val logConfig =  MadonnaConf.config.getConfig("log");

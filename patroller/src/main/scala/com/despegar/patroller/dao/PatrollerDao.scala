@@ -27,8 +27,8 @@ object PatrollerDao {
     stmt.update.apply()
   }
   
-  def updateStatus(id:Int, status:Int)(implicit session:DBSession) = {
-    val stmt = sql"""update log_report set status = ${status} where id = ${id}"""
+  def updateStatus(id:Int, status:Int, allowedRuleId:Option[Int])(implicit session:DBSession) = {
+    val stmt = sql"""update log_report set status = ${status}, allowed_rule_id = ${allowedRuleId} where id = ${id}"""
     stmt.update().apply
   }
   
@@ -52,6 +52,11 @@ object PatrollerDao {
   def listAllowed() = DB localTx { implicit session =>
     val stmt = sql"""select dst, dst_type from allowed_dest""".map { x => Allowed( x.string("dst_type"), x.string("dst") )}
     stmt.list.apply()
+  }
+  
+  def getAllowed(id:Int) = DB localTx { implicit session => 
+    val stmt = sql"""select dst, dst_type from allowed_dest where id = ${id} """.map { x => Allowed( x.string("dst_type"), x.string("dst") )}
+    stmt.list().apply().head
   }
   
 

@@ -26,6 +26,7 @@ class ReportController extends ScalatraServlet with StrictLogging  {
   }
 
 
+
   post ("/report") {
     try {
       val j = parse(request.body)
@@ -52,19 +53,22 @@ class ReportController extends ScalatraServlet with StrictLogging  {
    write(Report.listCurrentAlerts(start, end))
   }
   
-  post("/explain") {
+  
+  post("/testexplainbulk") {
     val j = parse(request.body)
-    val id = (j \ "id").values.toString().toInt
-    val reason = ( j \ "reason" ).values.toString()
-    val filterValue = ( j \ "filterValue").values.toString()
-    val filterType = ( j \ "filterType" ).values.toString()
-    if (filterType != "net" && filterType != "host") {
-      halt(400, reason = s"filter type should be net or host")
-    } else {
-      Report.explain(id, reason, filterValue, filterType)
-      "OK"
-    }
+    val id = ( j \ "idExplain").values.toString.toInt
+    val start = formatter.parseDateTime(( j \ "start").values.toString())
+    val end = formatter.parseDateTime(( j \ "end").values.toString())
+    write(Report.testExplainBulk(id, start, end))
   }
+
+  post("/explainbulk") {
+    val j = parse(request.body)
+    val id = ( j \ "idExplain").values.toString.toInt
+    val start = formatter.parseDateTime(( j \ "start").values.toString())
+    val end = formatter.parseDateTime(( j \ "end").values.toString())
+    write(Report.explainBulk(id, start, end))
+  }  
   
   post("/allowed") {
     val j = parse(request.body)

@@ -18,7 +18,8 @@ cloudUrl = Config.get("Cloudia","url")
 patrollerUrl = Config.get("Patroller","url")
 fileLog = Config.get("Logging","file")
 
-logging.basicConfig(filename = fileLog , level = logging.DEBUG)
+logging.basicConfig(filename = fileLog , level = logging.DEBUG, format='%(asctime)s %(message)s')
+
 
 class TcpdumpLine:
 	def __init__(self, vm, srcIp, srcPort, dstIp, dstPort):
@@ -85,13 +86,14 @@ def performCollection(json_trace):
 	runTcpdump(params, 30)
 
 def buildProcess(json_trace):
-	return ["/usr/sbin/tcpdump", "-i", "any",json_trace['tcpdumpParams'],"-w","pcap"]
+	return ["/usr/sbin/tcpdump", "-i", "any",'(tcp or udp ) and ('  + json_trace['tcpdumpParams'] + ')',"-w","pcap"]
 
 def runTcpdump(commands,tts):
 	log("about to run tcpdump " + str(commands[1:]))
 	pid = subprocess.Popen(commands).pid
-	log("started " + str(pid))
-	time.sleep(tts)
+	log("started " + str(pid) + " waiting for " + str(tts))
+	#time.sleep(tts)
+	time.sleep(120)
 	os.kill(pid, 9)	
 
 def getVm(ipA, ipB):
@@ -120,19 +122,27 @@ def sendData(dataToSend,url):
 	headers = {"Content-type": "application/json", "Accept": "text/plain"}
 	for d in dataToSend:
 		if (d != None):
+			log("to send" + str(d))
 			data = json.dumps(d, default=lambda o: o.__dict__, sort_keys=True, indent = 4) 
-			print data
-			#req = urllib2.Request(url, data, {'Content-Type': 'application/json'})
-			#urllib2.urlopen(req)
+			req = urllib2.Request(url, data, {'Content-Type': 'application/json'})
+			urllib2.urlopen(req)
 			
 	
-vmDictionary =  buildVmDict(cloudUrl)
-log("instances dictionary loaded")
-#json_trace = ask(patrollerUrl + "/trace/" + platform.node() )
-#if json_trace['shouldTrace'] == True:
-#	performCollection(json_trace)		
-#	r = processFile()
-#	sendData(r,patrollerUrl + "/report")
+log("starting... ")
+json_trace = ask(patrollerUrl + "/trace/" + platform.node() )
+log("trace 2" + str(json_trace))
+if json_trace['shouldTrace'] == True:
+	log("staring to trace ")
+	vmDictionary =  buildVmDict(cloudUrl)
+	log("instances dictionary loaded")
+	log(json_trace)
+	performCollection(json_trace)		
+	log("collected. starting to process file")
+	r = processFile()
+	log("file processed. starting to send")
+	sendData(r,patrollerUrl + "/report")
+	log("data send. ")
+	os.remove("./pcap")
+else:
+	log("nothing to do for now")
 
-r = processFile()
-sendData(r, 'http://localhost:9290/patroller/report')
