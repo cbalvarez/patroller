@@ -27,6 +27,12 @@ object PatrollerDao {
     stmt.update.apply()
   }
   
+  def insertTraceQuestion(host:String, timestamp:DateTime, answer:String) = DB localTx { implicit session =>
+    val stmt = sql"""insert into trace_question(host, date_question, answer) values 
+                        (${host}, ${timestamp}, ${answer})"""
+    stmt.update().apply()
+  }
+  
   def updateStatus(id:Int, status:Int, allowedRuleId:Option[Int])(implicit session:DBSession) = {
     val stmt = sql"""update log_report set status = ${status}, allowed_rule_id = ${allowedRuleId} where id = ${id}"""
     stmt.update().apply
