@@ -38,7 +38,8 @@ class ReportController extends ScalatraServlet with StrictLogging  {
       val ts = formatter.parseDateTime(( j \ "timestamp").values.toString())
       val srcIp = (j \ "srcIp").values.toString()
       val dstIp = (j \ "dstIp").values.toString()
-      Report.reportUnknownDestEvent(new ReportEvent(host, vm, srcIp, dstIp, srcPort, dstPort,  ts))
+      val trafficType = (j \ "trafficType").values.toString()
+      Report.reportUnknownDestEvent(new ReportEvent(host, vm, srcIp, dstIp, srcPort, dstPort, trafficType, ts))
       "OK"
     } catch {
       case e:Exception => logger.debug("exception e:" + e.getStackTraceString)
