@@ -22,23 +22,24 @@ logging.basicConfig(filename = fileLog , level = logging.DEBUG, format='%(asctim
 
 
 class TcpdumpLine:
-	def __init__(self, vm, srcIp, srcPort, dstIp, dstPort):
+	def __init__(self, vm, srcIp, srcPort, dstIp, dstPort, trafficType):
 		self.host = platform.node ()
 		self.vm  = vm
 		self.srcIp = srcIp
 		self.srcPort = srcPort
 		self.dstIp = dstIp
 		self.dstPort = dstPort
+		self.trafficType = trafficType
 		self.timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S') 
 
 	def __eq__(self, other):
 		if (isinstance(other, self.__class__)):
-			return (self.srcIp == other.srcIp and self.srcPort == other.srcPort and self.dstIp == other.dstIp and self.dstPort == other.dstPort)
+			return (self.srcIp == other.srcIp and self.srcPort == other.srcPort and self.dstIp == other.dstIp and self.dstPort == other.dstPort and self.trafficType == other.trafficType)
 		else:
 			return False
 			
 	def __hash__(self):
-		return hash (self.srcIp + self.srcPort + self.dstIp + self.dstPort)
+		return hash (self.srcIp + self.srcPort + self.dstIp + self.dstPort + self.trafficType)
 
 	def __str__(self):
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent = 4) 
@@ -104,14 +105,15 @@ def getVm(ipA, ipB):
 	return "Unkwnown"
 
 def processLine(l):
-	g = re.search(".+ IP (([0-9]{1,3}\.){3}[0-9]{1,3})\.([0-9]+) > (.+)\.([0-9]+)\:", l)
+	g = re.search(".+ IP (([0-9]{1,3}\.){3}[0-9]{1,3})(\.([0-9]+))? > (([0-9]{1,3}\.){3}[0-9]{1,3})(\.([0-9]+))?: ([^,]+)",l)
 	if (g == None):
 		return None
 	origIp = g.group(1)
-	origPort = g.group(3)
-	dstIp = g.group(4)
-	dstPort = g.group(5)
-	return TcpdumpLine(getVm(origIp, dstIp), origIp, origPort, dstIp, dstPort)
+	origPort = g.group(4)
+	dstIp = g.group(5)
+	dstPort = g.group(8)
+	trafficType = g.group(9)
+	return TcpdumpLine(getVm(origIp, dstIp), origIp, origPort, dstIp, dstPort, trafficType)
 
 def processFile():
 	output = subprocess.Popen(["/usr/sbin/tcpdump","-n","-r","pcap"], stdout = subprocess.PIPE)	
