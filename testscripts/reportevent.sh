@@ -1,2 +1,4 @@
-curl --header 'Content-Type:application/json'  -X POST -d "{\"host\":\"e15-host01\", \"ip\":\"200.32.54.33\", \"vm\":\"vm-test-00\", \"inport\":\"100\", \"outport\": \"200\", \"timestamp\":\"01-10-2017 20:00:00\" }" http://localhost:9290/patroller/report
+curl --header 'Content-Type:application/json'  -X POST -d "{ \"dstIp\":\"188.105.89.134\", \"dstPort\":\"80\", \"host\":\"e33-host07\", \"srcIp\":\"10.2.201.24\", \"srcPort\":\"44084\", \"timestamp\":\"12-01-2016 16:37:07\", \"trafficType\":\"Flags [.]\", \"vm\":\"bartoxxx\" }"  http://localhost:9290/patroller/report
+
+
 

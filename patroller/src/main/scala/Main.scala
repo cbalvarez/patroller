@@ -9,8 +9,9 @@ import org.slf4j.LoggerFactory
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.core.FileAppender
 import ch.qos.logback.classic.spi.ILoggingEvent
-import ch.qos.logback.classic.Level 
+import ch.qos.logback.classic.Level
 import com.despegar.sbt.madonna.MadonnaConf
+import scalikejdbc.ConnectionPool
   
 object Main extends App{
   def setLog() = {
@@ -33,6 +34,15 @@ object Main extends App{
 
     d.addAppender(fileAppender)
   }
+  
+  def setDB() = {
+    Class.forName("com.mysql.jdbc.Driver")
+    val dbConfig = MadonnaConf.config.getConfig("db")
+    val url = dbConfig.getString("url")
+    val user = dbConfig.getString("user")
+    val passwd = dbConfig.getString("passwd")  
+    ConnectionPool.singleton(url, user, passwd)  
+  }
 
   val server = new Server()
   val connector = new SelectChannelConnector()
@@ -46,6 +56,7 @@ object Main extends App{
   context.setServer(server)
   server.setHandler(context)
   setLog()
+  setDB()
   try {
     server.start()
     server.join()
