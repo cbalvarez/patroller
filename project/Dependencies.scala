@@ -33,7 +33,7 @@ object Dependencies {
   val commonsCodec = "commons-codec" % "commons-codec" % "1.3"
   val httpClient = "org.apache.httpcomponents" % "httpclient" % "4.3.1"
   val mail = "javax.mail" % "mail" % "1.4.1"
-  val liftJson = "net.liftweb" %% "lift-json-ext" % "2.6"
+  val liftJson = "net.liftweb" %% "lift-json-ext" % "2.6.2"
   val scalatra =   "org.scalatra" %% "scalatra" % "2.3.1"
   val jetty = "org.eclipse.jetty" % "jetty-webapp" % "8.1.7.v20120910"
   val javax =   "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016"
