@@ -57,7 +57,6 @@ object PatrollerDao {
   }
 
   def enumToBddColumb(rp:ReputationProcessors) = {
-   reg
   }
   
   
